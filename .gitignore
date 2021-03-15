@@ -1,0 +1,8 @@
+# dependencies
+node_modules/
+
+# config file
+config.json
+
+# database file
+*.sqlite
