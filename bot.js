@@ -44,6 +44,12 @@ client.on("message", async (message) => {
     }
 
     message.channel.send(embed);
+  } else if (
+    command === "reset" &&
+    message.author.id === process.env.ADMIN_ID
+  ) {
+    await keyv.set("bonk", 0);
+    message.channel.send("Set bonks back to 0!");
   }
 });
 
