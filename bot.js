@@ -1,19 +1,26 @@
 const Discord = require("discord.js");
 const Keyv = require("keyv");
+const express = require("express");
+const path = require("path");
 
 const client = new Discord.Client();
 const keyv = new Keyv(process.env.REDIS_URL);
+const app = express();
 
 keyv.on("error", (err) => console.error("Keyv connection error:", err));
 
 client.once("ready", async () => {
-  console.log("Ready!");
+  console.log("Discord ready!");
 });
 
 client.on("message", async (message) => {
-  if (!message.content.startsWith(process.env.PREFIX) || message.author.bot) return;
+  if (!message.content.startsWith(process.env.PREFIX) || message.author.bot)
+    return;
 
-  const args = message.content.slice(process.env.PREFIX.length).trim().split(/ +/);
+  const args = message.content
+    .slice(process.env.PREFIX.length)
+    .trim()
+    .split(/ +/);
   const command = args.shift().toLowerCase();
 
   if (command === "bonk") {
@@ -41,3 +48,12 @@ client.on("message", async (message) => {
 });
 
 client.login(process.env.TOKEN);
+
+app.get("/", async (req, res) => {
+  const count = await keyv.get("bonk");
+  res.send(`There has been ${count} bonk${count > 1 ? "s" : ""} so far.`);
+});
+
+app.listen(process.env.PORT || 5000, () => {
+  console.log("Express listening.");
+});
