@@ -8,7 +8,6 @@ keyv.on("error", (err) => console.error("Keyv connection error:", err));
 
 client.once("ready", async () => {
   console.log("Ready!");
-  await
 });
 
 client.on("message", async (message) => {
