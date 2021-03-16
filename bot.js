@@ -36,7 +36,8 @@ client.on("message", async (message) => {
    /　　 ｏ━━ヽニニフ──☆\n\
   しー- Ｊ　　ヾ( ﾟдﾟ)ﾉ゛"
       )
-      .setFooter(`There has been ${count} bonk${count > 1 ? "s" : ""} so far.`);
+      .setFooter(`There has been ${count} bonk${count > 1 ? "s" : ""} so far.`)
+      .setColor(process.env.EMBED_COLOR);
 
     if (message.mentions.users.size) {
       const user = message.mentions.users.first();
