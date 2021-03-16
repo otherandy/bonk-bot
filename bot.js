@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const Keyv = require("keyv");
 const express = require("express");
-const path = require("path");
+const wakeUpDyno = require("wokeDyno.js");
 
 const client = new Discord.Client();
 const keyv = new Keyv(process.env.REDIS_URL);
