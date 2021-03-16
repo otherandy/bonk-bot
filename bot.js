@@ -63,4 +63,5 @@ app.get("/", async (req, res) => {
 
 app.listen(process.env.PORT || 5000, () => {
   console.log("Express listening.");
+  wakeUpDyno(process.env.DYNO_URL);
 });
