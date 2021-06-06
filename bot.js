@@ -52,6 +52,10 @@ client.on("message", async (message) => {
     return message.channel.send(reply);
   }
 
+  if (command.owner && message.author.id !== process.env.OWNER_ID) {
+    return message.reply("you don't have permission to do that.");
+  }
+
   try {
     command.execute(message, args, bonks);
   } catch (error) {
