@@ -4,6 +4,7 @@ module.exports = {
   name: "bonk",
   description: "Bonk!",
   async execute(message, args, keyv) {
+    // TODO: throw error if keyv is down
     const count = parseInt(await keyv.get("total")) + 1;
     if (count == NaN) count = 1;
     await keyv.set("total", count);
