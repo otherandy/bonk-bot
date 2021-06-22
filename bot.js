@@ -76,7 +76,6 @@ client.login(process.env.TOKEN);
 if (process.env.NODE_ENV === "production") {
   const express = require("express");
   const app = express();
-  const port = 3000;
   const wakeUpDyno = require(path.resolve(__dirname, "wokeDyno.js"));
 
   app.get("/", async (req, res) => {
@@ -88,7 +87,7 @@ if (process.env.NODE_ENV === "production") {
     );
   });
 
-  app.listen(port, () => {
+  app.listen(process.env.PORT || 3000, () => {
     console.log("Express listening.");
     // start up wakeupdyno, disables heroku sleep
     wakeUpDyno(process.env.DYNO_URL);
