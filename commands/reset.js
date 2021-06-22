@@ -5,7 +5,7 @@ module.exports = {
   async execute(message, args, keyv) {
     // TODO: throw error if keyv is down
     const count = args.length ? args[0] : 0;
-    await keyv.set("total", count);
+    await keyv.set("total", parseInt(count));
     message.channel.send(`Set bonks to ${count}!`);
   },
 };
