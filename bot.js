@@ -25,29 +25,39 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-const bonks = new Keyv(process.env.REDIS_URL);
+const db = { info, bonks, admins, prefixes };
 
-// TODO: disallow usage while on error
-bonks.on("error", (err) => console.error("Keyv connection error:", err));
+db.info = new Keyv(process.env.REDIS_URL, { namespace: "info" });
+db.bonks = new Keyv(process.env.REDIS_URL, { namespace: "bonks" });
+db.admins = new Keyv(process.env.REDIS_URL, { namespace: "admins" });
+db.prefixes = new Keyv(process.env.REDIS_URL, { namespace: "prefixes" });
+
+db.info.on("error", (err) => console.error("Keyv connection error:", err));
+db.bonks.on("error", (err) => console.error("Keyv connection error:", err));
+db.admins.on("error", (err) => console.error("Keyv connection error:", err));
+db.prefixes.on("error", (err) => console.error("Keyv connection error:", err));
 
 client.once("ready", async () => {
   console.log("Discord ready!");
 });
 
 client.on("message", async (message) => {
-  if (!message.content.startsWith(process.env.PREFIX) || message.author.bot)
-    return;
+  const prefix =
+    (await db.prefixes.get(message.guild.id)) || process.env.DEFAULT_PREFIX;
+
+  if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   // split the message by whitespace
-  const args = message.content
-    .slice(process.env.PREFIX.length)
-    .trim()
-    .split(/ +/);
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
   if (!client.commands.has(commandName)) return;
 
   const command = client.commands.get(commandName);
+
+  if (command.guildOnly && message.channel.type === "dm") {
+    return message.reply("I can't execute that command inside DMs!");
+  }
 
   if (command.args && !args.length) {
     let reply = `You didn't provide any arguments, ${message.author}!`;
@@ -62,7 +72,7 @@ client.on("message", async (message) => {
   }
 
   try {
-    command.execute(message, args, bonks);
+    command.execute(message, args, db);
   } catch (error) {
     console.error(error);
     message.reply("there was an error trying to execute that command.");
@@ -80,7 +90,7 @@ if (process.env.NODE_ENV === "production") {
   const wakeUpDyno = require(path.resolve(__dirname, "wokeDyno.js"));
 
   app.get("/", async (req, res) => {
-    const count = await bonks.get("total");
+    const count = await db.info.get("total");
     res.send(
       `There ha${count == 1 ? "s" : "ve"} been ${count} bonk${
         count > 1 ? "s" : ""
