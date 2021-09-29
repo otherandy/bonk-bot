@@ -3,23 +3,17 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
   name: "bonk",
   description: "Bonk!",
-  async execute(message, args, keyv) {
-    // TODO: throw error if keyv is down
-    const count = parseInt(await keyv.get("total")) + 1;
-    if (count == NaN) count = 1;
-    await keyv.set("total", count);
+  async execute(message, args, db) {
+    const total = parseInt((await db.info.get("total")) || 0) + 1;
+    await db.info.set("total", total);
 
     const embed = new MessageEmbed()
-      .setDescription(
-        "                              ☆　　☆　　  ☆\n\
-      ∧,,∧　　　＼　 │　 ／\n\
-   (；`・ω・）　　　BONK！！\n\
-   /　　 ｏ━━ヽニニフ──☆\n\
-  しー- Ｊ　　ヾ( ﾟдﾟ)ﾉ゛"
-      )
+      .setTitle("Bonk!")
+      .setAuthor("", message.author.defaultAvatarURL)
+      .setImage("attachment://bonk.png")
       .setFooter(
-        `There ha${count == 1 ? "s" : "ve"} been ${count} bonk${
-          count > 1 ? "s" : ""
+        `There ha${total == 1 ? "s" : "ve"} been ${total} bonk${
+          total > 1 ? "s" : ""
         } so far.`
       )
       .setColor("GREEN");

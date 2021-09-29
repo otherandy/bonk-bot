@@ -1,11 +1,10 @@
 module.exports = {
   name: "reset",
-  description: "Resets the count",
+  description: "Resets the total",
   owner: true,
-  async execute(message, args, keyv) {
-    // TODO: throw error if keyv is down
-    const count = args.length ? args[0] : 0;
-    await keyv.set("total", parseInt(count));
-    message.channel.send(`Set bonks to ${count}!`);
+  async execute(message, args, db) {
+    const total = args.length ? args[0] : 0;
+    await db.info.set("total", parseInt(total));
+    message.channel.send(`Set bonks to ${total}!`);
   },
 };
