@@ -4,27 +4,27 @@ module.exports = {
   name: "bonk",
   description: "Bonk!",
   async execute(message, args, db) {
-    const total = parseInt((await db.info.get("total")) || 0) + 1;
+    const total = (parseInt(await db.info.get("total")) || 0) + 1;
     await db.info.set("total", total);
 
     const embed = new MessageEmbed()
-      .setTitle("Bonk!")
       .setAuthor("", message.author.defaultAvatarURL)
-      .setImage("attachment://bonk.png")
-      .setFooter(
-        `There ha${total == 1 ? "s" : "ve"} been ${total} bonk${
-          total > 1 ? "s" : ""
-        } so far.`
-      )
+      .setImage(process.env.IMAGE_LINK)
+      .setFooter(`Total: ${total} bonk${total > 1 ? "s" : ""}.`)
       .setColor("GREEN");
 
-    // TODO: Add individial count
-    // if (message.mentions.users.size) {
-    //   const user = message.mentions.users.first();
-    //   embed.setTitle(`${user.username} has been bonked!`);
+    if (message.mentions.users.size) {
+      const personal = parseInt(await db.bonks.get(user.id));
+      await db.bonks.set(user.id, (personal || 0) + 1);
 
-    //   await keyv.set(user.id, parseInt(await keyv.get(user.id)) + 1);
-    // }
+      const guild = message.guild;
+      const user = message.mentions.users.first();
+      const guildUser = guild.members.fetch(user.id);
+      embed.setTitle(`${guildUser.nickname} has been bonked!`);
+      embed.setDescription(
+        `They have been bonked ${personal} time${personal == 1 ? "" : "s"}.`
+      );
+    }
 
     message.channel.send(embed);
   },
