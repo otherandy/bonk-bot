@@ -15,8 +15,8 @@ module.exports = {
 
     if (message.mentions.users.size) {
       const user = message.mentions.users.first();
-      const personal = parseInt(await db.bonks.get(user.id)) || 0;
-      await db.bonks.set(user.id, personal + 1);
+      const personal = (parseInt(await db.bonks.get(user.id)) || 0) + 1;
+      await db.bonks.set(user.id, personal);
 
       const guild = message.guild;
       const guildUser = guild.members.fetch(user.id);
