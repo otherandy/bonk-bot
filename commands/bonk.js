@@ -8,13 +8,9 @@ module.exports = {
     await db.info.set("total", total);
 
     const embed = new MessageEmbed()
-    .setDescription(
-      "                              ☆　　☆　　  ☆\n\
-    ∧,,∧　　　＼　 │　 ／\n\
- (；`・ω・）　　　BONK！！\n\
- /　　 ｏ━━ヽニニフ──☆\n\
-しー- Ｊ　　ヾ( ﾟдﾟ)ﾉ゛"
-    )
+      .setTitle("Bonk!")
+      .setAuthor("", message.author.defaultAvatarURL)
+      .setImage("attachment://bonk.png")
       .setFooter(
         `There ha${total == 1 ? "s" : "ve"} been ${total} bonk${
           total > 1 ? "s" : ""
