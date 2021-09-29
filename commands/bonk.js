@@ -4,20 +4,20 @@ module.exports = {
   name: "bonk",
   description: "Bonk!",
   async execute(message, args, db) {
-    const count = parseInt((await db.info.get("total")) || 0) + 1;
-    await db.info.set("total", count);
+    const total = parseInt((await db.info.get("total")) || 0) + 1;
+    await db.info.set("total", total);
 
     const embed = new MessageEmbed()
-      .setDescription(
-        "                              ☆　　☆　　  ☆\n\
-      ∧,,∧　　　＼　 │　 ／\n\
-   (；`・ω・）　　　BONK！！\n\
-   /　　 ｏ━━ヽニニフ──☆\n\
-  しー- Ｊ　　ヾ( ﾟдﾟ)ﾉ゛"
-      )
+    .setDescription(
+      "                              ☆　　☆　　  ☆\n\
+    ∧,,∧　　　＼　 │　 ／\n\
+ (；`・ω・）　　　BONK！！\n\
+ /　　 ｏ━━ヽニニフ──☆\n\
+しー- Ｊ　　ヾ( ﾟдﾟ)ﾉ゛"
+    )
       .setFooter(
-        `There ha${count == 1 ? "s" : "ve"} been ${count} bonk${
-          count > 1 ? "s" : ""
+        `There ha${total == 1 ? "s" : "ve"} been ${total} bonk${
+          total > 1 ? "s" : ""
         } so far.`
       )
       .setColor("GREEN");

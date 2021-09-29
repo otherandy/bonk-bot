@@ -90,10 +90,10 @@ if (process.env.NODE_ENV === "production") {
   const wakeUpDyno = require(path.resolve(__dirname, "wokeDyno.js"));
 
   app.get("/", async (req, res) => {
-    const count = await db.info.get("total");
+    const total = await db.info.get("total");
     res.send(
-      `There ha${count == 1 ? "s" : "ve"} been ${count} bonk${
-        count > 1 ? "s" : ""
+      `There ha${total == 1 ? "s" : "ve"} been ${total} bonk${
+        total > 1 ? "s" : ""
       } so far.`
     );
   });
