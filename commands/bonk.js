@@ -14,11 +14,11 @@ module.exports = {
       .setColor("GREEN");
 
     if (message.mentions.users.size) {
+      const user = message.mentions.users.first();
       const personal = parseInt(await db.bonks.get(user.id));
       await db.bonks.set(user.id, (personal || 0) + 1);
 
       const guild = message.guild;
-      const user = message.mentions.users.first();
       const guildUser = guild.members.fetch(user.id);
       embed.setTitle(`${guildUser.nickname} has been bonked!`);
       embed.setDescription(
