@@ -1,6 +1,6 @@
 {
   "name": "bonk",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "A discord bot that counts the amount of bonks.",
   "main": "bot.js",
   "scripts": {
