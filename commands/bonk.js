@@ -18,7 +18,7 @@ module.exports = {
       const personal = (parseInt(await db.bonks.get(user.id)) || 0) + 1;
       await db.bonks.set(user.id, personal);
 
-      const guildUser = message.guild.members.fetch(user.id);
+      const guildUser = await message.guild.members.fetch(user.id);
       embed.setTitle(`${guildUser.nickname || user.username} has been bonked!`);
       embed.setDescription(
         `They have been bonked ${personal} time${personal == 1 ? "" : "s"}.`
