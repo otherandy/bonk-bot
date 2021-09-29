@@ -25,7 +25,7 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
-const db = { info, bonks, admins, prefixes };
+const db = {};
 
 db.info = new Keyv(process.env.REDIS_URL, { namespace: "info" });
 db.bonks = new Keyv(process.env.REDIS_URL, { namespace: "bonks" });
