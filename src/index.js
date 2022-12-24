@@ -2,13 +2,11 @@
 // The main goal to count the total bonks
 // Created by Andy
 
-// heroku uses another method to load env vars
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+const dotenv = require("dotenv");
+dotenv.config();
 
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const Discord = require("discord.js");
 const Keyv = require("keyv");
@@ -25,25 +23,25 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
+const DATABASE_URL = process.env.REDIS_URL;
 const db = {};
 
-db.info = new Keyv(process.env.REDIS_URL, { namespace: "info" });
-db.bonks = new Keyv(process.env.REDIS_URL, { namespace: "bonks" });
-db.admins = new Keyv(process.env.REDIS_URL, { namespace: "admins" });
-db.prefixes = new Keyv(process.env.REDIS_URL, { namespace: "prefixes" });
+db.info = new Keyv(DATABASE_URL, { namespace: "info" });
+db.bonks = new Keyv(DATABASE_URL, { namespace: "bonks" });
+db.admins = new Keyv(DATABASE_URL, { namespace: "admins" });
 
-db.info.on("error", (err) => console.error("Keyv connection error:", err));
-db.bonks.on("error", (err) => console.error("Keyv connection error:", err));
-db.admins.on("error", (err) => console.error("Keyv connection error:", err));
-db.prefixes.on("error", (err) => console.error("Keyv connection error:", err));
+const error = (err) => console.error("Keyv connection error:", err);
+
+db.info.on("error", error);
+db.bonks.on("error", error);
+db.admins.on("error", error);
 
 client.once("ready", async () => {
   console.log("Discord ready!");
 });
 
 client.on("message", async (message) => {
-  const prefix =
-    (await db.prefixes.get(message.guild.id)) || process.env.DEFAULT_PREFIX;
+  const prefix = "?";
 
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
@@ -79,27 +77,4 @@ client.on("message", async (message) => {
   }
 });
 
-client.login(process.env.TOKEN);
-
-// only enable website fallback on prod
-// unnecesary for testing
-if (process.env.NODE_ENV === "production") {
-  const express = require("express");
-  const app = express();
-  const wakeUpDyno = require(path.resolve(__dirname, "wokeDyno.js"));
-
-  app.get("/", async (req, res) => {
-    const total = await db.info.get("total");
-    res.send(
-      `There ha${total == 1 ? "s" : "ve"} been ${total} bonk${
-        total > 1 ? "s" : ""
-      } so far.`
-    );
-  });
-
-  app.listen(process.env.PORT || 3000, () => {
-    console.log("Express listening.");
-    // start up wakeupdyno, disables heroku sleep
-    wakeUpDyno(process.env.DYNO_URL);
-  });
-}
+client.login(process.env.DISCORD_TOKEN);
