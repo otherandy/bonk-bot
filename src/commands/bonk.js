@@ -1,3 +1,5 @@
+// TODO: Update to v14
+
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {
