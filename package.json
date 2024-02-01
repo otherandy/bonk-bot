@@ -2,11 +2,11 @@
   "name": "bonk",
   "version": "2.0.0-beta",
   "description": "A discord bot that counts the amount of bonks.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "deploy": "node src/deploy.js"
+    "register": "node src/register.js"
   },
   "keywords": [],
   "author": "OtherAndy",
